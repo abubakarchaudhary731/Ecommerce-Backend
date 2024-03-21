@@ -2,6 +2,7 @@
 
 namespace App\Models\Product;
 
+use App\Models\Cart\Cart;
 use App\Models\Product\ProductImage;
 use App\Models\Product\ProductCategory;
 use App\Models\Product\ProductDiscount;
@@ -13,16 +14,15 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
+        'category_id',
+        'discount_id',
         'name',
         'slug',
         'description',
-        'sku',
-        'image',
-        'category_id',
+        'thumbnail',
         'brand',
         'price',
         'stock',
-        'discount_id',
         'created_at',
         'updated_at',
     ];
@@ -40,6 +40,11 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
     }
 }
 

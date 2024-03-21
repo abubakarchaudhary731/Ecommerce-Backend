@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
-use App\Repositories\Main\ProductRepository;
-use App\Repositories\Main\ProductRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Auth\UserRepository;
+use App\Repositories\Main\ProductRepository;
+use App\Repositories\Main\Cart\CartRepository;
 use App\Repositories\Auth\UserRepositoryInterface;
+use App\Repositories\Main\ProductRepositoryInterface;
+use App\Repositories\Main\Cart\CartRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $this->app->bind(CartRepositoryInterface::class, CartRepository::class);
     }
 
     /**

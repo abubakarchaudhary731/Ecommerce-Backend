@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Main;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
@@ -24,7 +25,10 @@ class ProductRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:20'],
             'description' => ['required', 'string' ],
-            'image' => ['nullable', 'string'],
+            'thumbnail' => ['required', 'string' ],
+            'price' => ['required', 'integer'],
+            'stock' => ['required', 'integer'],
+            'category_name' => ['required', 'string' ],
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Main\ProductRequest;
 use App\Repositories\Main\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -22,19 +23,12 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        return $this->product->createProduct($request->all());
+        $products = $this->product->createProduct($request->all());
+        return $products;
     }
 
     /**
@@ -42,7 +36,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        return $this->product->getProductById($id);
+        $product = $this->product->getProductById($id);
+        return $product;
     }
 
     /**
@@ -50,15 +45,17 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = $this->product->editProduct($id);
+        return $product;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, string $id)
     {
-        //
+        $updatedProduct = $this->product->updateProduct($id, $request->all());
+        return $updatedProduct;
     }
 
     /**
@@ -66,6 +63,6 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return $this->product->deleteProduct($id);
     }
 }
