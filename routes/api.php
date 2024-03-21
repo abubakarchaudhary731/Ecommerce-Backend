@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Main\CartController;
+use App\Http\Controllers\Main\CheckoutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Main\ProductController;
@@ -34,7 +35,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('cart/store', [CartController::class, 'store']);
         Route::post('cart/update/{id}', [CartController::class, 'update']);
         Route::post('cart/delete/{id}', [CartController::class, 'destroy']);
-        Route::post('checkout', [CartController::class, 'checkout']);
+        Route::post('checkout', [CheckoutController::class, 'checkout']);
     });
 
 /* *************************** Admin API's *************************** */

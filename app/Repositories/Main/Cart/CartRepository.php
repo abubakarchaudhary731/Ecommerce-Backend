@@ -3,7 +3,6 @@
 namespace App\Repositories\Main\Cart;
 
 use App\Models\Cart\Cart;
-use App\Models\Order\CheckoutItem;
 use App\Repositories\Main\Cart\CartRepositoryInterface;
 
 class CartRepository implements CartRepositoryInterface
@@ -12,12 +11,12 @@ class CartRepository implements CartRepositoryInterface
     {
         $user = auth()->user();
         $productId = $request->product_id;
-    
+
         // Check if the product already exists in the user's cart
         $existingCart = Cart::where('user_id', $user->id)
-                            ->where('product_id', $productId)
-                            ->first();
-    
+            ->where('product_id', $productId)
+            ->first();
+
         if ($existingCart) {
             // If the product exists, update its quantity
             $existingCart->update([
@@ -37,9 +36,11 @@ class CartRepository implements CartRepositoryInterface
 
     public function getAllCartItems()
     {
-        $userCart = Cart::with(['product' => function ($query) {
-            $query->select('id', 'name', 'price', 'thumbnail', 'stock');
-        }])->where('user_id', auth()->user()->id)->get();
+        $userCart = Cart::with([
+            'product' => function ($query) {
+                $query->select('id', 'name', 'price', 'thumbnail', 'stock');
+            }
+        ])->where('user_id', auth()->user()->id)->get();
         return $userCart;
     }
 
@@ -49,7 +50,7 @@ class CartRepository implements CartRepositoryInterface
         if ($cart) {
             $cart->update([
                 // Update the quantity if provided, otherwise keep the existing quantity
-                'quantity' => $request->quantity ?? $cart->quantity 
+                'quantity' => $request->quantity ?? $cart->quantity
             ]);
             $cart->save();
 
@@ -67,27 +68,12 @@ class CartRepository implements CartRepositoryInterface
             return response()->json([
                 'message' => 'Cart item deleted successfully'
             ]);
-        }  
-    
+        }
+
         return response()->json([
             'message' => 'Cart item not found'
         ], 404);
-        
+
     }
 
-    public function checkoutItems($request)
-{
-    // Decode the JSON array sent in the request
-    $cartIds = json_encode($request->cart_ids);
-
-    // Create a new CheckoutItem instance and save it to the database
-    $checkoutItem = CheckoutItem::create([
-        'user_id' => auth()->user()->id,
-        'cart_ids' => $cartIds
-    ]);
-
-    // Return the created CheckoutItem instance or any other response as needed
-    return response()->json($checkoutItem);
-}
-    
 }

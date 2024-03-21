@@ -36,8 +36,4 @@ class CartController extends Controller
         return $this->cart->deleteCartItem($id);
     }
 
-    public function checkout(Request $request)
-    {
-        return $this->cart->checkoutItems($request);
-    }
 }
