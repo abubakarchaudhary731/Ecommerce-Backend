@@ -4,8 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Cart\Cart;
+use App\Models\Order\Order;
 use App\Models\UserAddress;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Order\CheckoutItem;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -66,5 +68,15 @@ class User extends Authenticatable
     public function cart()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function checkoutItems()
+    {
+        return $this->hasMany(CheckoutItem::class);
     }
 }

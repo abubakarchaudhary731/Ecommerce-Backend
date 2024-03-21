@@ -3,6 +3,7 @@
 namespace App\Repositories\Main\Cart;
 
 use App\Models\Cart\Cart;
+use App\Models\Order\CheckoutItem;
 use App\Repositories\Main\Cart\CartRepositoryInterface;
 
 class CartRepository implements CartRepositoryInterface
@@ -73,5 +74,20 @@ class CartRepository implements CartRepositoryInterface
         ], 404);
         
     }
+
+    public function checkoutItems($request)
+{
+    // Decode the JSON array sent in the request
+    $cartIds = json_encode($request->cart_ids);
+
+    // Create a new CheckoutItem instance and save it to the database
+    $checkoutItem = CheckoutItem::create([
+        'user_id' => auth()->user()->id,
+        'cart_ids' => $cartIds
+    ]);
+
+    // Return the created CheckoutItem instance or any other response as needed
+    return response()->json($checkoutItem);
+}
     
 }

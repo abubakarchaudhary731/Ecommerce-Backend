@@ -8,4 +8,5 @@ interface CartRepositoryInterface
     public function getAllCartItems();
     public function updateCartItem($id, $data);
     public function deleteCartItem($id);
+    public function checkoutItems($request);
 }
