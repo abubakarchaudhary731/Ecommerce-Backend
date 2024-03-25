@@ -2,19 +2,39 @@
 
 namespace App\Repositories\Main\Checkout;
 
-use App\Models\Order\CheckoutItem;
+use App\Models\Cart\Cart;
 
 class CheckoutRepository implements CheckoutRepositoryInterface
 {
     public function checkoutItems($request)
     {
-        $cartIds = json_encode($request->cart_ids);
+        $cartIds = $request->cart_ids;
+        $products = [];
+        $total = 0;
+        // Fetch product data from cart through selected idz
+        foreach ($cartIds as $id) {
+            $product = Cart::with([
+                'product' => function ($query) {
+                    $query->select('id', 'name', 'price', 'thumbnail', 'stock');
+                }
+            ])->where('user_id', auth()->user()->id)->find($id);
+            if ($product) {
+                $total += $product->quantity * $product->product->price;
+                $products[] = $product;
+            }
+        }
+        // Fetch User Address
+        $userAddress = auth()->user()->userAddresses()->get();
 
-        $checkoutItem = CheckoutItem::create([
-            'user_id' => auth()->user()->id,
-            'cart_ids' => $cartIds
-        ]);
+        // Fetch User Card Details
+        $userCardDetails = auth()->user()->userPaymentDetails()->get();
 
-        return response()->json($checkoutItem);
+        return [
+            'products' => $products, 
+            'userAddress' => $userAddress,
+            'userCardDetails' => $userCardDetails,
+            'total' => $total
+        ];
     }
+
 }

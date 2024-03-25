@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('country');
             $table->string('state');
             $table->string('city');
-            $table->string('area');
-            $table->string('postal_code');
+            $table->string('address');
+            $table->integer('postal_code');
             $table->string('phone');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

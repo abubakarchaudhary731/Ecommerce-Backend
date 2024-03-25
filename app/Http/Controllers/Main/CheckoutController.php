@@ -14,8 +14,9 @@ class CheckoutController extends Controller
         $this->checkout = $interface;
     }
 
-    public function checkout(Request $request)
+    public function proceedToCheckout(Request $request)
     {
         return $this->checkout->checkoutItems($request);
     }
+
 }

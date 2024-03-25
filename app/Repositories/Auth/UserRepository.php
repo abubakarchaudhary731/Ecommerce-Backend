@@ -76,9 +76,13 @@ class UserRepository implements UserRepositoryInterface
         $user = User::find($id);
         if ($user) {
             $user->delete();
-            return true;
+            return response()->json([
+                'message' => 'User deleted successfully',
+            ]);
         }
-        return false;
+        return response()->json([
+            'message' => 'User not found',
+        ]);
     }
 
     // Add more methods as needed...

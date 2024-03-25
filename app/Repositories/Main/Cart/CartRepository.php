@@ -3,6 +3,7 @@
 namespace App\Repositories\Main\Cart;
 
 use App\Models\Cart\Cart;
+use App\Models\Product\Product;
 use App\Repositories\Main\Cart\CartRepositoryInterface;
 
 class CartRepository implements CartRepositoryInterface
@@ -11,6 +12,22 @@ class CartRepository implements CartRepositoryInterface
     {
         $user = auth()->user();
         $productId = $request->product_id;
+        $requestedQuantity = $request->quantity ?? 1;
+
+        // Retrieve the product
+        $product = Product::find($productId);
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        if ($product->stock < $requestedQuantity) {
+            return response()->json([
+                'message' => 'Requested quantity exceeds available stock'
+            ], 400);
+        }
 
         // Check if the product already exists in the user's cart
         $existingCart = Cart::where('user_id', $user->id)
@@ -19,20 +36,31 @@ class CartRepository implements CartRepositoryInterface
 
         if ($existingCart) {
             // If the product exists, update its quantity
-            $existingCart->update([
-                'quantity' => $existingCart->quantity + ($request->quantity ?? 1)
-            ]);
-            return $existingCart;
+            $newQuantity = $existingCart->quantity + $requestedQuantity;
+            if ($product->stock >= $newQuantity) {
+                $existingCart->update([
+                    'quantity' => $newQuantity
+                ]);
+                return $existingCart;
+            } else {
+                return response()->json([
+                    'message' => 'Requested quantity exceeds available stock'
+                ], 400);
+            }
         } else {
             // If the product does not exist, create a new cart entry
             $cart = Cart::create([
                 'user_id' => $user->id,
                 'product_id' => $productId,
-                'quantity' => $request->quantity ?? 1
+                'quantity' => $requestedQuantity
             ]);
-            return $cart;
+            return response()->json([
+                'message' => 'Product added to cart successfully',
+                'cart' => $cart
+            ], 200);
         }
     }
+
 
     public function getAllCartItems()
     {
@@ -48,17 +76,33 @@ class CartRepository implements CartRepositoryInterface
     {
         $cart = Cart::find($id);
         if ($cart) {
-            $cart->update([
-                // Update the quantity if provided, otherwise keep the existing quantity
-                'quantity' => $request->quantity ?? $cart->quantity
-            ]);
-            $cart->save();
+            // Retrieve the product associated with the cart item
+            $product = $cart->product;
 
-            return $cart;
+            // Calculate the new quantity
+            $newQuantity = $request->quantity ?? $cart->quantity;
+
+            // Check if the new quantity exceeds the available stock
+            if ($product->stock >= $newQuantity) {
+                $cart->update([
+                    'quantity' => $newQuantity
+                ]);
+                return response()->json([
+                    'message' => 'Cart item updated successfully',
+                    'cart' => $cart
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Requested quantity exceeds available stock'
+                ], 400);
+            }
         } else {
-            return response()->json(['message' => 'Cart item not found'], 404);
+            return response()->json([
+                'message' => 'Cart item not found'
+            ], 404);
         }
     }
+
 
     public function deleteCartItem($id)
     {

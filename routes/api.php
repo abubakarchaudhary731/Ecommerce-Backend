@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Main\CartController;
 use App\Http\Controllers\Main\CheckoutController;
+use App\Http\Controllers\Main\OrderController;
+use App\Http\Controllers\UserDetailController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Main\ProductController;
@@ -24,23 +26,46 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 /* *************************** User API's *************************** */
-Route::group(['prefix' => 'v1'], function() {
-    Route::get('products', [ProductController::class, 'index']);
-    Route::get('products/{id}', [ProductController::class, 'show']);
-
-/* *************************** User Protected Routes *************************** */
-    Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('logout', [LoginController::class, 'logout']);
-        Route::get('cart', [CartController::class, 'index']);
-        Route::post('cart/store', [CartController::class, 'store']);
-        Route::post('cart/update/{id}', [CartController::class, 'update']);
-        Route::post('cart/delete/{id}', [CartController::class, 'destroy']);
-        Route::post('checkout', [CheckoutController::class, 'checkout']);
+Route::group(['prefix' => 'v1'], function () {
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('products', 'index');
+        Route::get('products/{id}', 'show');
     });
 
-/* *************************** Admin API's *************************** */
-    Route::post('products/store', [ProductController::class, 'store']);
-    Route::get('products/edit/{id}', [ProductController::class, 'edit']);
-    Route::post('products/update/{id}', [ProductController::class, 'update']);
-    Route::post('products/delete/{id}', [ProductController::class, 'destroy']);
+    /* *************************** User Auth Protected API's *************************** */
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::post('logout', [LoginController::class, 'logout']);
+
+        Route::controller(UserDetailController::class)->group(function () {
+            Route::post('useraddress/store', 'addressStore');
+            Route::post('useraddress/update/{id}', 'addressUpdate');
+            Route::post('useraddress/delete/{id}', 'addressDelete');
+            Route::post('paymentdetail/store', 'paymentDetailStore');
+            Route::post('paymentdetail/update/{id}', 'paymentDetailUpdate');
+            Route::post('paymentdetail/delete/{id}', 'paymentDetailDelete');
+        });
+
+        Route::controller(CartController::class)->group(function () {
+            Route::get('cart', 'index');
+            Route::post('cart/store', 'store');
+            Route::post('cart/update/{id}', 'update');
+            Route::post('cart/delete/{id}', 'destroy');
+        });
+
+        Route::controller(CheckoutController::class)->group(function () {
+            Route::post('checkout/store', 'proceedToCheckout');
+        });
+
+        Route::controller(OrderController::class)->group(function () {
+            Route::post('order/store', 'store');
+        });
+    });
+
+    /* *************************** Admin API's *************************** */
+    Route::controller(ProductController::class)->group(function () {
+        Route::post('products/store', 'store');
+        Route::get('products/edit/{id}', 'edit');
+        Route::post('products/update/{id}', 'update');
+        Route::post('products/delete/{id}', 'destroy');
+    });
 });
