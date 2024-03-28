@@ -14,12 +14,27 @@ class OrderController extends Controller
     {
         $this->order = $interface;
     }
+
     public function store(Request $request)
     {
         $placeOrder =  $this->order->placeOrder($request);
         return response()->json([
             'message' => 'Your Order has been placed successfully',
             'order' => $placeOrder
+        ]);
+    }
+
+    public function cancel($id)
+    {
+        return $this->order->cancelOrder($id);
+    }
+
+    public function history()
+    {
+        $orderHistory = $this->order->orderHistory();
+        return response()->json([
+            'message' => 'Order History related to your account',
+            'orderHistory' => $orderHistory
         ]);
     }
 }

@@ -19,15 +19,16 @@ class OrderRepository implements OrderRepositoryInterface
             'total_price' => $request->total_price,
             'address_id' => $request->address_id,
             'shipping_status' => 'processing',
-            'payment_status' => 'pending'
+            'payment_status' => 'pending',
+            'order_status' => 'pending',
         ]);
 
         if ($order) {
             // Get cart items
             $cartItems = Cart::where('user_id', auth()->id())
-                                ->whereIn('id', $request->cartIds)
-                                ->with('product:id,price,stock')
-                                ->get();
+                ->whereIn('id', $request->cartIds)
+                ->with('product:id,price,stock')
+                ->get();
 
             // Process each cart item
             foreach ($cartItems as $cartItem) {
@@ -42,10 +43,44 @@ class OrderRepository implements OrderRepositoryInterface
                 // Deduct quantity from product stock
                 $cartItem->product->stock -= $cartItem->quantity;
                 $cartItem->product->save();
+
+                // Remove cart item
+                $cartItem->delete();
             }
         }
 
         return $order;
     }
+
+
+    public function cancelOrder($id)
+    {
+        $cancelOrder = Order::find($id);
+        if ($cancelOrder) {
+            $cancelOrder->order_status = 'cancelled';
+            $cancelOrder->save();
+
+            return response()->json([
+                'message' => 'Your Order has been cancelled successfully',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Order not found',
+        ], 404);
+    }
+
+
+    public function orderHistory()
+    {
+        $orderHistory = Order::with(['orderItems', 'address', 'orderItems.product' => function ($query) {
+            $query->select('id', 'name', 'thumbnail');
+        }])
+        ->where('user_id', auth()->id())
+        ->get();
+    
+        return $orderHistory;
+    }
+    
 
 }

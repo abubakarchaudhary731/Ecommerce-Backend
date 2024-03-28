@@ -58,6 +58,8 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::controller(OrderController::class)->group(function () {
             Route::post('order/store', 'store');
+            Route::post('order/cancel/{id}', 'cancel');
+            Route::get('order/history', 'history');
         });
     });
 

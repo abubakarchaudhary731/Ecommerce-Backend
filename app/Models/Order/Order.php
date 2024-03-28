@@ -4,6 +4,7 @@ namespace App\Models\Order;
 
 use App\Models\User;
 use App\Models\Order\OrderItem;
+use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,6 +25,11 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(UserAddress::class, 'address_id');
     }
 
     public function orderItems()

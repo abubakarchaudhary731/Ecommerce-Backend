@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('payment_status')->default('pending');
             $table->float('total_price');
             $table->string('shipping_status')->default('processing');
+            $table->string('order_status')->default('pending');
             $table->unsignedBigInteger('address_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('address_id')->references('id')->on('user_addresses')->onDelete('cascade');
