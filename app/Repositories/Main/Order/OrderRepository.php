@@ -2,9 +2,13 @@
 
 namespace App\Repositories\Main\Order;
 
+use App\Jobs\OrderConfirmationJob;
+use App\Mail\User\OrderConfirmationMessage;
 use App\Models\Cart\Cart;
 use App\Models\Order\Order;
+use App\Mail\Admin\PlaceOrder;
 use App\Models\Order\OrderItem;
+use Illuminate\Support\Facades\Mail;
 use App\Repositories\Main\Order\OrderRepositoryInterface;
 
 class OrderRepository implements OrderRepositoryInterface
@@ -27,7 +31,7 @@ class OrderRepository implements OrderRepositoryInterface
             // Get cart items
             $cartItems = Cart::where('user_id', auth()->id())
                 ->whereIn('id', $request->cartIds)
-                ->with('product:id,price,stock')
+                ->with('product:id,name,price,stock')
                 ->get();
 
             // Process each cart item
@@ -47,11 +51,21 @@ class OrderRepository implements OrderRepositoryInterface
                 // Remove cart item
                 $cartItem->delete();
             }
+            // Sent Place Order Message to Admin
+            $detail = [
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email,
+                'order_number' => $order->order_number,
+                'total_price' => $order->total_price,
+            ];
+            if (dispatch(new OrderConfirmationJob($detail))) {
+                return response()->json([
+                    'message' => 'Your Order Email has been placed successfully',
+                    'order' => $order
+                ]);                 
+            }
         }
-
-        return $order;
     }
-
 
     public function cancelOrder($id)
     {
