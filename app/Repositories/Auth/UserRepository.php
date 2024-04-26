@@ -10,15 +10,15 @@ class UserRepository implements UserRepositoryInterface
     /* ***************** Register User Function ************************ */
     public function createUser($data)
     {
-        // $user = new User();
-        // $user->name = $data['name'];
-        // $user->email = $data['email'];
-        // $user->password = Hash::make($data['password']);
-        // $user->phone = $data['phone'] ?? null;
-        // $user->address = $data['address'] ?? null;
-        // $user->save();
-        // return $user;
+        $existingUser = User::where('email', $data['email'])->first();
+    
+        if ($existingUser) {
+            // User already exists, return a custom response
+            return response()->json(['message' => 'The Email has already been Taken'], 200);
+        }
+    
         return User::create($data);
+    
     }
      /* ***************** Login User Function ************************ */
     public function login($request)

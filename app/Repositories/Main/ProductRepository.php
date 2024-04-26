@@ -47,11 +47,7 @@ class ProductRepository implements ProductRepositoryInterface
     /* ************************ Get All Products Function ************************ */
     public function getAllProducts()
     {
-        return Product::with([
-            'images' => function ($query) {
-                $query->select('product_id', 'path'); // Select only the 'product_id' and 'path' columns
-            }
-        ])->get();
+        return Product::with([ 'category', 'discount' ])->get();
     }
 
     /* ************************ Get Product By ID Function ************************ */
@@ -60,7 +56,7 @@ class ProductRepository implements ProductRepositoryInterface
         return Product::with([
             'images' => function ($query) {
                 $query->select('product_id', 'path');
-            }
+            }, 'category', 'discount'
         ])->find($id);
     }
 

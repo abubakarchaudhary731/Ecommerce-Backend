@@ -20,6 +20,10 @@ use App\Http\Controllers\Auth\RegisterController;
 |
 */
 
+header("Access-Control-Allow-Credentials: true");
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin,Access-Control-Allow-Headers, Content-Type, X-Auth-Token , Authorization, X-Request-With');
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [LoginController::class, 'login']);
     Route::post('register', [RegisterController::class, 'register']);
