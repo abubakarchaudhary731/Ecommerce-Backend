@@ -33,7 +33,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['prefix' => 'v1'], function () {
     Route::controller(ProductController::class)->group(function () {
         Route::get('products', 'index');
-        Route::get('products/{id}', 'show');
+        Route::get('products/{slug}', 'show');
     });
 
     /* *************************** User Auth Protected API's *************************** */

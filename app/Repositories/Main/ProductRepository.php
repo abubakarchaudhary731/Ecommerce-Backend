@@ -51,13 +51,13 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /* ************************ Get Product By ID Function ************************ */
-    public function getProductById($id)
+    public function getProductById($slug)
     {
         return Product::with([
             'images' => function ($query) {
                 $query->select('product_id', 'path');
             }, 'category', 'discount'
-        ])->find($id);
+        ])->where('slug', $slug)->first();
     }
 
     /* ************************ Update Product Function ************************ */
