@@ -41,9 +41,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('logout', [LoginController::class, 'logout']);
 
         Route::controller(UserDetailController::class)->group(function () {
+            Route::get('useraddress', 'getUserAddress');
             Route::post('useraddress/store', 'addressStore');
             Route::post('useraddress/update/{id}', 'addressUpdate');
             Route::post('useraddress/delete/{id}', 'addressDelete');
+            Route::get('paymentdetail', 'paymentDetailIndex');
             Route::post('paymentdetail/store', 'paymentDetailStore');
             Route::post('paymentdetail/update/{id}', 'paymentDetailUpdate');
             Route::post('paymentdetail/delete/{id}', 'paymentDetailDelete');

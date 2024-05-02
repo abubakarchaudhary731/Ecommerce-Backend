@@ -14,6 +14,11 @@ class UserDetailController extends Controller
         $this->address = $interface;
     }
     
+    public function getUserAddress()
+    {
+        return $this->address->getUserAddress();
+    }
+
     public function addressStore(UserAddressRequest $request)
     {
 
@@ -36,6 +41,11 @@ class UserDetailController extends Controller
     public function addressDelete($id)
     {
         return $this->address->deleteUserAddress($id);
+    }
+
+    public function paymentDetailIndex()
+    {
+        return $this->address->getUserPaymentDetail();
     }
 
     public function paymentDetailStore(PaymentDetailRequest $request)

@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserDetailRepository implements UserDetailRepositoryInterface
 {
+
+    /* ***************** Get User Address Function ************************ */
+    public function getUserAddress()
+    {
+        return UserAddress::where('user_id', auth()->user()->id)->get();
+    }
     /* ***************** Store User Address Function ************************ */
     public function createUserAddress($request)
     {
@@ -56,6 +62,12 @@ class UserDetailRepository implements UserDetailRepositoryInterface
             'message' => 'Address not found',
         ]);
 
+    }
+
+    /* ***************** Get User Payment Detail Function ************************ */
+    public function getUserPaymentDetail()
+    {
+        return UserPaymentDetail::where('user_id', auth()->user()->id)->get();
     }
 
     /* ***************** Create User Payment Detail Function ************************ */
