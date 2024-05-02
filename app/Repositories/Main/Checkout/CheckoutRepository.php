@@ -15,7 +15,7 @@ class CheckoutRepository implements CheckoutRepositoryInterface
         foreach ($cartIds as $id) {
             $product = Cart::with([
                 'product' => function ($query) {
-                    $query->select('id', 'name', 'price', 'thumbnail', 'stock');
+                    $query->select('id', 'name', 'price', 'thumbnail');
                 }
             ])->where('user_id', auth()->user()->id)->find($id);
             if ($product) {
@@ -23,16 +23,9 @@ class CheckoutRepository implements CheckoutRepositoryInterface
                 $products[] = $product;
             }
         }
-        // Fetch User Address
-        $userAddress = auth()->user()->userAddresses()->get();
-
-        // Fetch User Card Details
-        $userCardDetails = auth()->user()->userPaymentDetails()->get();
 
         return [
             'products' => $products, 
-            'userAddress' => $userAddress,
-            'userCardDetails' => $userCardDetails,
             'total' => $total
         ];
     }
