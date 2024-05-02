@@ -68,7 +68,8 @@ class CartRepository implements CartRepositoryInterface
             'product' => function ($query) {
                 $query->select('id', 'name', 'price', 'thumbnail', 'stock');
             }
-        ])->where('user_id', auth()->user()->id)->get();
+        ])->where('user_id', auth()->user()->id)
+        ->orderBy('created_at', 'desc')->get();
         return $userCart;
     }
 
