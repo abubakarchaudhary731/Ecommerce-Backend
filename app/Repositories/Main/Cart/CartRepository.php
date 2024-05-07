@@ -34,19 +34,11 @@ class CartRepository implements CartRepositoryInterface
             ->where('product_id', $productId)
             ->first();
 
-        if ($existingCart) {
-            // If the product exists, update its quantity
-            $newQuantity = $existingCart->quantity + $requestedQuantity;
-            if ($product->stock >= $newQuantity) {
-                $existingCart->update([
-                    'quantity' => $newQuantity
-                ]);
-                return $existingCart;
-            } else {
-                return response()->json([
-                    'message' => 'Requested quantity exceeds available stock'
-                ], 400);
-            }
+        if ($existingCart) {           
+            return response()->json([
+                'message' => 'Product already exists in cart'
+            ], 200);
+
         } else {
             // If the product does not exist, create a new cart entry
             $cart = Cart::create([
@@ -95,7 +87,7 @@ class CartRepository implements CartRepositoryInterface
             } else {
                 return response()->json([
                     'message' => 'Requested quantity exceeds available stock'
-                ], 400);
+                ], 200);
             }
         } else {
             return response()->json([

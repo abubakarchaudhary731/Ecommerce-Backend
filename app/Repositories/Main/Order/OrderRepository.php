@@ -60,7 +60,7 @@ class OrderRepository implements OrderRepositoryInterface
             ];
             if (dispatch(new OrderConfirmationJob($detail))) {
                 return response()->json([
-                    'message' => 'Your Order Email has been placed successfully',
+                    'message' => 'Your Order has been placed successfully',
                     'order' => $order
                 ]);                 
             }
@@ -87,11 +87,8 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function orderHistory()
     {
-        $orderHistory = Order::with(['orderItems', 'address', 'orderItems.product' => function ($query) {
-            $query->select('id', 'name', 'thumbnail');
-        }])
-        ->where('user_id', auth()->id())
-        ->get();
+        $orderHistory = Order::where('user_id', auth()->id())
+        ->orderBy('created_at', 'desc')->get();
     
         return $orderHistory;
     }
