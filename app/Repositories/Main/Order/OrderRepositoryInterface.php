@@ -9,4 +9,6 @@ interface OrderRepositoryInterface
     public function cancelOrder($id);
 
     public function orderHistory();
+
+    public function orderDetails($id);
 }

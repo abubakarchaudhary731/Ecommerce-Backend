@@ -37,4 +37,13 @@ class OrderController extends Controller
             'orderHistory' => $orderHistory
         ]);
     }
+
+    public function orderDetails($id)
+    {
+        $orderDetails = $this->order->orderDetails($id);
+        return response()->json([
+            'message' => 'Order Details',
+            'orderDetails' => $orderDetails
+        ]);
+    }
 }

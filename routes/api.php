@@ -66,6 +66,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('order/store', 'store');
             Route::post('order/cancel/{id}', 'cancel');
             Route::get('order/history', 'history');
+            Route::get('order/details/{id}', 'orderDetails');
         });
     });
 

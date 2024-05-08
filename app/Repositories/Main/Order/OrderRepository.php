@@ -2,13 +2,13 @@
 
 namespace App\Repositories\Main\Order;
 
-use App\Jobs\OrderConfirmationJob;
-use App\Mail\User\OrderConfirmationMessage;
 use App\Models\Cart\Cart;
 use App\Models\Order\Order;
 use App\Mail\Admin\PlaceOrder;
 use App\Models\Order\OrderItem;
+use App\Jobs\OrderConfirmationJob;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\User\OrderConfirmationMessage;
 use App\Repositories\Main\Order\OrderRepositoryInterface;
 
 class OrderRepository implements OrderRepositoryInterface
@@ -94,4 +94,10 @@ class OrderRepository implements OrderRepositoryInterface
     }
     
 
+    public function orderDetails($id)
+    {
+        $orderDetails = Order::with(['orderItems', 'address'])->find($id);
+        return $orderDetails;
+    }
+    
 }
