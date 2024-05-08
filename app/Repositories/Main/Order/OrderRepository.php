@@ -96,7 +96,8 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function orderDetails($id)
     {
-        $orderDetails = Order::with(['orderItems', 'address'])->find($id);
+        $orderDetails = Order::with(['orderItems.product:id,name,thumbnail', 'address', 'user'])
+        ->find($id);
         return $orderDetails;
     }
     
