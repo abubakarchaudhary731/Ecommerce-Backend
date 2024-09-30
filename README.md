@@ -1,5 +1,11 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
+## Introduction
+I have developed a full-stack eCommerce store by creating APIs using Laravel for the backend. These APIs were then integrated into the frontend using Next.js, providing a seamless shopping experience. You can find the frontend code for the project here: 
+```bash
+https://github.com/abubakarchaudhary731/Ecommerce-Frontend
+```
+
 ## Getting Started
 
 - First, Clone this project using ssh key.
